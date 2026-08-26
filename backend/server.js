@@ -12,14 +12,21 @@ import contactRouter from './routes/contactRoute.js'
 // App Config
 const app = express()
 const port = process.env.PORT || 4000
+
+// Initialize Database and Cloudinary
 connectDB()
 connectCloudinary()
 
-// middlewares
+// Middlewares
 app.use(express.json())
-app.use(cors())
+app.use(cors({
+    origin: '*',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'token']
+}))
 
-// api endpoints
+// API Endpoints
 app.use('/api/user', userRouter)
 app.use('/api/product', productRouter)
 app.use('/api/cart', cartRouter)
@@ -27,7 +34,13 @@ app.use('/api/order', orderRouter)
 app.use('/api/contact', contactRouter)
 
 app.get('/', (req, res) => {
-    res.send('API Working')
+    res.send('EliteKart API is running...')
 })
 
-app.listen(port, () => console.log('Server started on PORT : ' + port))
+// Listen locally or on standalone server (Vercel invokes the exported app as a serverless function)
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+    app.listen(port, () => console.log('Server started on PORT : ' + port))
+}
+
+export default app
+

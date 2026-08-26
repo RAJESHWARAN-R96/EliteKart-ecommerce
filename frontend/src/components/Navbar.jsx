@@ -1,11 +1,18 @@
 import React, { useContext, useState } from 'react';
-import { NavLink, Link } from 'react-router-dom';
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import { assets } from '../assets/assets';
 import { ShopContext } from '../context/ShopContextInstance';
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
   const { setShowSearch, getCartCount, token, setToken } = useContext(ShopContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    setToken('');
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
 
   return (
     <div className='flex items-center justify-between py-5 font-medium mb-8'>
@@ -44,13 +51,13 @@ const Navbar = () => {
         <img onClick={() => setShowSearch(true)} src={assets.search_icon} className='w-5 cursor-pointer' alt="Search" />
 
         <div className='group relative'>
-          <img onClick={() => token ? null : window.location.href = '/login'} className='w-5 cursor-pointer' src={assets.profile_icon} alt="Profile" />
+          <img onClick={() => token ? null : navigate('/login')} className='w-5 cursor-pointer' src={assets.profile_icon} alt="Profile" />
           {token && (
             <div className='group-hover:block hidden absolute dropdown-menu right-0 pt-4 z-50'>
               <div className='flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded shadow-md'>
                 <Link to='/profile'><p className='cursor-pointer hover:text-black'>My Profile</p></Link>
                 <Link to='/orders'><p className='cursor-pointer hover:text-black'>Orders</p></Link>
-                <p onClick={() => { setToken(''); localStorage.removeItem('token'); window.location.href = '/login'; }} className='cursor-pointer hover:text-black'>Logout</p>
+                <p onClick={handleLogout} className='cursor-pointer hover:text-black'>Logout</p>
               </div>
             </div>
           )}
