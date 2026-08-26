@@ -5,10 +5,10 @@ import { toast } from 'react-toastify';
 
 const ShopContextProvider = (props) => {
     const currency = '$';
-    const delivery_fee = 10;
-    const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000';
+    const backendUrl = import.meta.env.VITE_BACKEND_URL !== undefined 
+        ? import.meta.env.VITE_BACKEND_URL 
+        : (import.meta.env.DEV ? 'http://localhost:4000' : '');
 
-    // Global States
     const [products, setProducts] = useState([]);
     const [search, setSearch] = useState('');
     const [showSearch, setShowSearch] = useState(false);

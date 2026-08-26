@@ -1,29 +1,39 @@
 # 🚀 Vercel Deployment Guide for EliteKart
 
-This project is a full-stack MERN e-commerce application consisting of:
-- **Backend API**: Node.js + Express (Serverless on Vercel) + MongoDB Atlas + Cloudinary
-- **Frontend App**: React + Vite + TailwindCSS (Vercel Edge SPA)
+This project is configured to be deployed in **ONE SINGLE Vercel Project** (or separately if you prefer).
 
 ---
 
-## 📋 Prerequisites Checklist
+## ⚡ Method 1: Single-Project Unified Deployment (Recommended - 1 Click!)
 
-1. [Vercel Account](https://vercel.com/signup)
-2. [MongoDB Atlas Database](https://www.mongodb.com/cloud/atlas) (Free tier works great)
-   - **Crucial Step**: In MongoDB Atlas -> **Network Access** -> Add IP `0.0.0.0/0` (Allow access from anywhere, required for Vercel Serverless dynamic IPs).
-3. [Cloudinary Account](https://cloudinary.com/) (For product image storage)
-4. GitHub repository synced with your latest code:
-   ```bash
-   git add .
-   git commit -m "Configure Vercel deployment settings"
-   git push origin main
-   ```
+Deploy your entire store (Frontend + Backend API) under **a single Vercel project and domain** (e.g., `https://elitekart.vercel.app`):
 
----
+### Step 1: Push the latest changes to GitHub
+```bash
+git add .
+git commit -m "Configure unified Vercel deployment"
+git push origin main
+```
 
-## 🛠️ Deployment Method: Vercel Dashboard (Recommended)
+### Step 2: Deploy on Vercel
+1. Go to your [Vercel Dashboard](https://vercel.com/dashboard) and click **"Add New..."** ➔ **"Project"**.
+2. Select your repository `EliteKart-ecommerce` and click **Import**.
+3. **Leave Root Directory as `./` (Root)** — do NOT change it to backend or frontend.
+4. Expand **Environment Variables** and add your backend credentials:
+   - `MONGODB_URI`: `mongodb+srv://<username>:<password>@cluster0.xxx.mongodb.net/e-commerce?retryWrites=true&w=majority`
+   - `JWT_SECRET`: `<your_jwt_secret>`
+   - `CLOUDINARY_NAME`: `<your_cloudinary_name>`
+   - `CLOUDINARY_API_KEY`: `<your_cloudinary_api_key>`
+   - `CLOUDINARY_SECRET_KEY`: `<your_cloudinary_secret_key>`
+   - `ADMIN_EMAIL`: `admin@elitekart.com`
+   - `ADMIN_PASSWORD`: `<your_admin_password>`
+   - *(Optional)* `STRIPE_SECRET_KEY`, `RAZORPAY_KEY_ID`, `RAZORPAY_KEY_SECRET`
+5. Click **Deploy**.
+6. That's it! 🎉
+   - Your Frontend storefront will be live at `https://your-project.vercel.app`
+   - Your Backend API endpoints will be live at `https://your-project.vercel.app/api/...`
+   - Zero CORS issues, zero extra URLs to configure!
 
-Deploying as two connected Vercel projects (Backend + Frontend) is the standard and cleanest way:
 
 ### Step 1: Deploy the Backend API
 
