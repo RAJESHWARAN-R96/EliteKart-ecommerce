@@ -88,5 +88,8 @@ npm run dev
 
 The application will now be running at `http://localhost:5173`. Use the `ADMIN_EMAIL` and `ADMIN_PASSWORD` you configured in the backend `.env` file to log in to the secure dashboard.
 
+## Deployment link
+https://elite-kart-ecommerce-haja.vercel.app/login
+
 ## 📝 License
 This project is open-source and available under the standard MIT License.
