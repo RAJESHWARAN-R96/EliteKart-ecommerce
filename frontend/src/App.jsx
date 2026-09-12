@@ -25,6 +25,7 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import AdminLayout from './pages/AdminLayout'
 import AdminAddProduct from './pages/AdminAddProduct'
+import AdminManageProducts from './pages/AdminManageProducts'
 import AdminQueries from './pages/AdminQueries'
 
 const App = () => {
@@ -72,7 +73,8 @@ const App = () => {
 
         {/* Admin Routes */}
         <Route path="/admin" element={<AdminLayout adminToken={adminToken} setAdminToken={setAdminToken} />}>
-          <Route index element={<Navigate to="add-product" replace />} />
+          <Route index element={<Navigate to="products" replace />} />
+          <Route path="products" element={<AdminManageProducts adminToken={adminToken} />} />
           <Route path="add-product" element={<AdminAddProduct adminToken={adminToken} />} />
           <Route path="queries" element={<AdminQueries adminToken={adminToken} />} />
         </Route>

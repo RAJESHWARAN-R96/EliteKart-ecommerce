@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 
 const ShopContextProvider = (props) => {
     const currency = '$';
+    const delivery_fee = 10;
     const backendUrl = import.meta.env.VITE_BACKEND_URL !== undefined 
         ? import.meta.env.VITE_BACKEND_URL 
         : (import.meta.env.DEV ? 'http://localhost:4000' : '');

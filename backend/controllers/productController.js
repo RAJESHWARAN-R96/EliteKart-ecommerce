@@ -61,9 +61,74 @@ const listProducts = async (req, res) => {
 // function for removing product
 const removeProduct = async (req, res) => {
     try {
-
-        await productModel.findByIdAndDelete(req.body.id)
+        const id = req.body.id || req.body.productId
+        await productModel.findByIdAndDelete(id)
         res.json({ success: true, message: "Product Removed" })
+
+    } catch (error) {
+        console.log(error)
+        res.json({ success: false, message: error.message })
+    }
+}
+
+// function for updating product
+const updateProduct = async (req, res) => {
+    try {
+        const { id, name, description, price, category, subCategory, sizes, bestseller, existingImages } = req.body
+
+        const product = await productModel.findById(id)
+        if (!product) {
+            return res.json({ success: false, message: "Product not found" })
+        }
+
+        // Handle newly uploaded images if any
+        let newUploadedUrls = []
+        if (req.files) {
+            const image1 = req.files.image1 && req.files.image1[0]
+            const image2 = req.files.image2 && req.files.image2[0]
+            const image3 = req.files.image3 && req.files.image3[0]
+            const image4 = req.files.image4 && req.files.image4[0]
+
+            const images = [image1, image2, image3, image4].filter((item) => item !== undefined)
+
+            if (images.length > 0) {
+                newUploadedUrls = await Promise.all(
+                    images.map(async (item) => {
+                        let result = await cloudinary.uploader.upload(item.path, { resource_type: 'image' });
+                        return result.secure_url
+                    })
+                )
+            }
+        }
+
+        // Determine final image list
+        let finalImages = product.image || []
+        if (existingImages !== undefined) {
+            try {
+                finalImages = Array.isArray(existingImages) ? existingImages : JSON.parse(existingImages)
+            } catch (err) {
+                finalImages = typeof existingImages === 'string' ? [existingImages] : finalImages
+            }
+        }
+
+        if (newUploadedUrls.length > 0) {
+            finalImages = [...finalImages, ...newUploadedUrls]
+        }
+
+        const updateData = {
+            ...(name !== undefined && { name }),
+            ...(description !== undefined && { description }),
+            ...(category !== undefined && { category }),
+            ...(subCategory !== undefined && { subCategory }),
+            ...(price !== undefined && { price: Number(price) }),
+            ...(bestseller !== undefined && { bestseller: bestseller === "true" || bestseller === true }),
+            ...(sizes !== undefined && { sizes: typeof sizes === 'string' ? JSON.parse(sizes) : sizes }),
+            image: finalImages
+        }
+
+        const updatedProduct = await productModel.findByIdAndUpdate(id, updateData, { new: true })
+
+        res.json({ success: true, message: "Product Updated", product: updatedProduct })
 
     } catch (error) {
         console.log(error)
@@ -84,4 +149,4 @@ const singleProduct = async (req, res) => {
     }
 }
 
-export { listProducts, addProduct, removeProduct, singleProduct }
+export { listProducts, addProduct, removeProduct, updateProduct, singleProduct }
