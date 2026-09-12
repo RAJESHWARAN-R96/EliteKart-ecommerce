@@ -6,9 +6,11 @@ import { toast } from 'react-toastify';
 const ShopContextProvider = (props) => {
     const currency = '$';
     const delivery_fee = 10;
-    const backendUrl = import.meta.env.VITE_BACKEND_URL !== undefined 
-        ? import.meta.env.VITE_BACKEND_URL 
-        : (import.meta.env.DEV ? 'http://localhost:4000' : '');
+    const rawBackendUrl = import.meta.env.VITE_BACKEND_URL;
+    // In production, if backendUrl is unset or accidentally set to localhost, fallback to same origin ''
+    const backendUrl = (!import.meta.env.DEV && (!rawBackendUrl || rawBackendUrl.includes('localhost') || rawBackendUrl.includes('127.0.0.1')))
+        ? ''
+        : (rawBackendUrl || (import.meta.env.DEV ? 'http://localhost:4000' : ''));
 
     const [products, setProducts] = useState([]);
     const [search, setSearch] = useState('');

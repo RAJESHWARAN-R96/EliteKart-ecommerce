@@ -26,6 +26,16 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'token']
 }))
 
+// Ensure database connection in serverless environments
+app.use(async (req, res, next) => {
+    try {
+        await connectDB();
+    } catch (err) {
+        console.error("Database connection middleware error:", err);
+    }
+    next();
+})
+
 // API Endpoints
 app.use('/api/user', userRouter)
 app.use('/api/product', productRouter)
